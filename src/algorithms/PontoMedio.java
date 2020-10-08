@@ -2,45 +2,9 @@ package algorithms;
 
 import com.jogamp.opengl.GL2;
 
-public class PontoMedio extends LineAlgorithm{	
+public class PontoMedio extends OctantLineAlgorithm{	
 	public PontoMedio(GL2 gl) {
 		super(gl);
-	}
-	
-	public void draw(int x1, int y1, int x2, int y2) {
-		double m;
-		int dx, dy, aux;
-		if(x1>x2) {
-			aux=x1;
-			x1=x2;
-			x2=aux;
-			
-			aux=y1;
-			y1=y2;
-			y2=aux;
-		}
-		dx = x2-x1;
-		dy = y2-y1;
-		System.out.println("Entrou");
-		if(dy>0) {
-			m = (double)(y2-y1)/(x2-x1);
-			if(m<=1 && dx>0) {
-				//Primeiro octante e quinto octante
-				pontoMedioAsc(x1,y1, x2, y2);
-			}else if(m>1 && dx>0) {
-				//Segundo Octante e sexto octante
-				pontoMedioAscFunctionX(y1,x1, y2, x2);
-			}
-		}else if(dy<=0) {
-			m = (double)(y2-y1)/(x2-x1);
-			if(m<=-1 && dx>0) {
-				//Terceiro Octante e setimo cotante
-				pontoMedioDescFunctionX(y2, x2, y1, x1);
-			}else if(m>-1 && dx>0) {
-				//Quarto Octante e oitavo octante
-				pontoMedioDesc(x1,y1, x2, y2);
-			}
-		}
 	}
 
 	private void pontoMedioAsc(int x1, int y1, int x2, int y2) {
@@ -60,7 +24,7 @@ public class PontoMedio extends LineAlgorithm{
 		this.gl.glBegin(GL2.GL_POINTS);
 		while(x<x2) {
 			this.gl.glColor3f(1.0f,1.0f,1.0f);
-			this.gl.glVertex2f((float)x/320, (float)y/240);
+			this.gl.glVertex2d(x, y);
 			if(d<=0) {
 				d = d + incrE;
 				x++;
@@ -70,7 +34,7 @@ public class PontoMedio extends LineAlgorithm{
 				y++;
 			}
 		}
-		this.gl.glVertex2f((float)x/320, (float)y/240);
+		this.gl.glVertex2d(x, y);
 		this.gl.glEnd();
 		this.gl.glFlush();
 
@@ -93,7 +57,7 @@ public class PontoMedio extends LineAlgorithm{
 		this.gl.glBegin(GL2.GL_POINTS);
 		while(x<x2) {
 			this.gl.glColor3f(1.0f,1.0f,1.0f);
-			this.gl.glVertex2f((float)y/320, (float)x/240);
+			this.gl.glVertex2d(y, x);
 			if(d<=0) {
 				d = d + incrE;
 				x++;
@@ -103,7 +67,7 @@ public class PontoMedio extends LineAlgorithm{
 				y++;
 			}
 		}
-		this.gl.glVertex2f((float)y/320, (float)x/240);
+		this.gl.glVertex2d(y, x);
 		this.gl.glEnd();
 		this.gl.glFlush();
 	}
@@ -126,7 +90,7 @@ public class PontoMedio extends LineAlgorithm{
 		this.gl.glBegin(GL2.GL_POINTS);
 		while(x<x2) {
 			this.gl.glColor3f(1.0f,1.0f,1.0f);
-			this.gl.glVertex2f((float)y/320, (float)x/240);
+			this.gl.glVertex2d(y, x);
 			if(d>0) {
 				d = d + incrNE;
 				x++;
@@ -136,7 +100,7 @@ public class PontoMedio extends LineAlgorithm{
 				y--;
 			}
 		}
-		this.gl.glVertex2f((float)y/320, (float)x/240);
+		this.gl.glVertex2f(y, x);
 		this.gl.glEnd();
 		this.gl.glFlush();
 	}
@@ -159,7 +123,7 @@ public class PontoMedio extends LineAlgorithm{
 		this.gl.glBegin(GL2.GL_POINTS);
 		while(x<x2) {
 			this.gl.glColor3f(1.0f,1.0f,1.0f);
-			this.gl.glVertex2f((float)x/320, (float)y/240);
+			this.gl.glVertex2d(x, y);
 			if(d>0) {
 				d = d + incrNE;
 				x++;
@@ -169,8 +133,48 @@ public class PontoMedio extends LineAlgorithm{
 				y--;
 			}
 		}
-		this.gl.glVertex2f((float)x/320, (float)y/240);
+		this.gl.glVertex2d(x, y);
 		this.gl.glEnd();
 		this.gl.glFlush();
+	}
+
+	@Override
+	public void drawFirstOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioAsc(x1, y1, x2, y2);
+	}
+
+	@Override
+	public void drawSecondOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioAscFunctionX(y1, x1, y2, x2);
+	}
+
+	@Override
+	public void drawThirdOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioDescFunctionX(y2, x2, y1, x1);
+	}
+
+	@Override
+	public void drawFourthOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioDesc(x1, y1, x2, y2);
+	}
+
+	@Override
+	public void drawFifthOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioAsc(x2, y2, x1, y1);
+	}
+
+	@Override
+	public void drawSixthOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioAscFunctionX(y2, x2, y1, x1);
+	}
+
+	@Override
+	public void drawSeventhOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioDescFunctionX(y1, x1, y2, x2);
+	}
+
+	@Override
+	public void drawEighthOctant(int x1, int y1, int x2, int y2) {
+		this.pontoMedioDesc(x2, y2, x1, y1);
 	}
 }

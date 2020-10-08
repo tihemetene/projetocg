@@ -14,8 +14,18 @@ public class Renderer implements GLEventListener {
 		PontoMedio pontoMedio = new PontoMedio(gl);
 		gl.glViewport(80, 60, 640, 480);
 		gl.glClearColor(0, 0, 0, 0);
+		gl.glOrtho(-80, 80, -60, 60, -1, 1);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
-		pontoMedio.draw(5, -5, 0, 10);
+		//Primeiro Octante
+		pontoMedio.draw(0, 0, 50, 10);
+		//Segundo Octante
+		pontoMedio.draw(0, 0, 10, 50);
+		//Terceiro Octante
+		pontoMedio.draw(0, 50, 10, 0);
+		//Quinto Octante
+		pontoMedio.draw(0, 0, -50, -20);
+		//Ouinto Octante -> Primeiro Octanto
+		pontoMedio.draw(-50, -20, 0, 0);
 	}
 
 	@Override
@@ -27,7 +37,6 @@ public class Renderer implements GLEventListener {
 	@Override
 	public void init(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
